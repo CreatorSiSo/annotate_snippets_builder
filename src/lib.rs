@@ -16,12 +16,20 @@ pub struct Snippet<'a> {
 
 impl<'a> Snippet<'a> {
 	pub const fn new() -> Self {
+		Self::new_with_title(None)
+	}
+
+	pub const fn new_with_title(title: Option<Annotation<'a>>) -> Self {
+		let title = match title {
+			Some(inner) => Some(inner.build()),
+			None => None,
+		};
 		Self {
-			title: None,
+			title,
 			footer: Vec::new(),
 			slices: Vec::new(),
 			opt: FormatOptions {
-				color: true,
+				color: false,
 				anonymized_line_numbers: false,
 				margin: None,
 			},
@@ -33,18 +41,18 @@ impl<'a> Snippet<'a> {
 		self
 	}
 
-	pub fn add_footer(mut self, footer: Annotation<'a>) -> Self {
+	pub const fn format(mut self, opt: FormatOptions) -> Self {
+		self.opt = opt;
+		self
+	}
+
+	pub fn add_footer(&mut self, footer: Annotation<'a>) -> &mut Self {
 		self.footer.push(footer.build());
 		self
 	}
 
-	pub fn add_slice(mut self, slice: impl SliceBuild<'a>) -> Self {
+	pub fn add_slice(&mut self, slice: impl SliceBuild<'a>) -> &mut Self {
 		self.slices.push(slice.build());
-		self
-	}
-
-	pub fn format(mut self, opt: FormatOptions) -> Self {
-		self.opt = opt;
 		self
 	}
 
@@ -65,9 +73,9 @@ impl<'a> From<Snippet<'a>> for DisplayList<'a> {
 }
 
 pub struct Annotation<'a> {
-	id: Option<&'a str>,
-	label: Option<&'a str>,
-	annotation_type: AnnotationType,
+	pub id: Option<&'a str>,
+	pub label: Option<&'a str>,
+	pub annotation_type: AnnotationType,
 }
 
 impl<'a> Annotation<'a> {
