@@ -1,0 +1,23 @@
+[package]
+name = "annotate_snippets_builder"
+version = "0.1.0"
+edition = "2021"
+description = "Builder pattern abstraction for the annotate-snippets crate."
+repository = "https://github.com/CreatorSiSo/annotate_snippets_builder"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = ["color"]
+color = ["annotate-snippets/color"]
+yansi-term = ["annotate-snippets/yansi-term"]
+
+[[example]]
+name = "lexer"
+test = true
+
+[dependencies]
+annotate-snippets = { version = "0.9.1" }
+
+[dev-dependencies]
+stringx = "0.1.1"
